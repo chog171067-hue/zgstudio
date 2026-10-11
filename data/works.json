@@ -1,3 +1,24 @@
 {
-  "works": []
+  "works": [
+    {
+      "image": "/uploads/works/צילום מסך 2026-09-07 214709.webp",
+      "title": ""
+    },
+    {
+      "image": "/uploads/works/צילום מסך 2026-06-09 004523.webp",
+      "title": ""
+    },
+    {
+      "image": "/uploads/works/צילום מסך 2025-07-31 182615.webp",
+      "title": ""
+    },
+    {
+      "image": "/uploads/works/צילום מסך 2025-07-31 182925.webp",
+      "title": ""
+    },
+    {
+      "image": "/uploads/works/צילום מסך 2025-05-04 121408.webp",
+      "title": ""
+    }
+  ]
 }
