@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ציפי גרידינגר · סטודיו לגרפיקה</title>
+<meta name="description" content="ציפי גרידינגר, סטודיו לגרפיקה. מיתוג, לוגו, אריזות ודפוס.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&family=IBM+Plex+Sans+Hebrew:wght@400;500&display=swap">
+<!--PREVIEW-CUT-->
+<style>
+/* Layout: כותרת שקטה, סרט לוגואים, ואז קיר עבודות בסגנון פינטרסט שנטען בגלילה. כפתור קשר קבוע משמאל. */
+:root{
+  --paper:#fafaf8; --ink:#1a1b1e; --muted:#73767c; --line:#e4e4e0; --tile:#ecebe7; --accent:#1f3fd1;
+  --display:"Frank Ruhl Libre","David Libre",David,Georgia,serif;
+  --body:"IBM Plex Sans Hebrew","Arial Hebrew",Arial,sans-serif;
+  --gap:clamp(10px,1.6vw,18px);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{margin:0;direction:rtl;background:var(--paper);color:var(--ink);font:400 1rem/1.6 var(--body);padding-inline:clamp(16px,4vw,48px)}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+/* כותרת */
+.hero{text-align:center;padding-block:clamp(64px,12vw,140px) clamp(40px,6vw,64px)}
+.hero h1{font:400 clamp(2.6rem,8vw,5.6rem)/1 var(--display);margin:0;letter-spacing:-.01em}
+.hero p{margin:18px 0 0;font-size:clamp(.95rem,1.6vw,1.15rem);letter-spacing:.32em;color:var(--muted)}
+
+/* סרט לקוחות */
+.clients{border-block:1px solid var(--line);padding-block:28px 32px;margin-inline:calc(-1 * clamp(16px,4vw,48px));overflow:hidden}
+.clients h2{font:500 .8rem var(--body);letter-spacing:.24em;color:var(--muted);text-align:center;margin:0 0 22px}
+.marquee{overflow:hidden;direction:ltr;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.track{display:flex;width:max-content;animation:slide 40s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.logos{display:flex;align-items:center;gap:clamp(40px,6vw,80px);padding-inline:clamp(20px,3vw,40px)}
+.logos img{height:44px;width:auto;filter:grayscale(1);opacity:.7;transition:opacity .3s,filter .3s}
+.logos img:hover{filter:none;opacity:1}
+.ph-logo{height:44px;min-width:120px;padding-inline:18px;display:grid;place-items:center;border:1px dashed #c9c9c3;color:var(--muted);font-size:.8rem;border-radius:4px;white-space:nowrap}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* קיר עבודות */
+.wall{display:flex;gap:var(--gap);align-items:flex-start;padding-block:clamp(32px,5vw,56px) 80px}
+.col{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--gap)}
+.item{margin:0;background:var(--tile);overflow:hidden;border-radius:3px;cursor:zoom-in;animation:in .6s ease both;position:relative}
+.item img,.item .ph{width:100%;height:auto;aspect-ratio:var(--r);object-fit:cover;transition:transform .5s ease}
+.item:hover img,.item:hover .ph{transform:scale(1.03)}
+.ph{display:grid;place-items:center;color:rgba(26,27,30,.45);font-size:.78rem;letter-spacing:.08em}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.sentinel{height:1px}
+.end{text-align:center;color:var(--muted);font-size:.85rem;padding-bottom:64px}
+
+/* כפתור קשר */
+.cta{position:fixed;left:0;top:50%;transform:translateY(-50%);z-index:30;background:var(--ink);color:var(--paper);border:0;font:500 1rem var(--body);padding:16px 22px 16px 18px;border-radius:0 999px 999px 0;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.18);transition:padding .25s}
+.cta:hover{padding-left:26px}
+@media (max-width:640px){.cta{top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:none}}
+
+/* חלון קשר */
+dialog{border:0;padding:0;border-radius:6px;width:min(460px,calc(100vw - 32px));max-height:calc(100dvh - 32px);background:var(--paper);color:var(--ink);box-shadow:0 24px 80px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,20,22,.45);backdrop-filter:blur(3px)}
+.dlg{padding:32px clamp(20px,5vw,36px) 28px;position:relative}
+.x{position:absolute;top:12px;left:12px;width:36px;height:36px;border:0;background:none;font-size:1.5rem;line-height:1;color:var(--muted);cursor:pointer;border-radius:50%}
+.x:hover{background:var(--tile)}
+.dlg h3{font:400 1.9rem/1.1 var(--display);margin:0 0 14px}
+.details{margin:0 0 24px;padding:0 0 20px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:.98rem}
+.details dt{color:var(--muted)}
+.details dd{margin:0;direction:ltr;text-align:right;user-select:all}
+form{display:grid;gap:14px}
+label{display:grid;gap:5px;font-size:.88rem;color:var(--muted)}
+input,textarea{font:400 1rem var(--body);color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:4px;padding:10px 12px;width:100%}
+input:focus,textarea:focus{outline:none;border-color:var(--ink)}
+textarea{min-height:96px;resize:vertical}
+.send{margin-top:6px;background:var(--ink);color:var(--paper);border:0;border-radius:999px;font:500 1rem var(--body);padding:12px;cursor:pointer}
+.send:disabled{opacity:.5;cursor:default}
+.err{color:#b3261e;font-size:.88rem;margin:0}
+.hp{position:absolute;left:-9999px}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 22px;border-radius:999px;font-size:.95rem;z-index:40}
+
+/* תצוגת עבודה בגדול */
+.lb{position:fixed;inset:0;z-index:35;background:rgba(250,250,248,.97);display:grid;place-items:center;padding:24px;cursor:zoom-out}
+.lb img,.lb .ph{max-height:88vh;max-width:min(92vw,1400px);width:auto;aspect-ratio:var(--r);height:88vh;object-fit:contain;background:var(--tile)}
+
+@media (prefers-reduced-motion:reduce){.track{animation:none}.item{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>ציפי גרידינגר</h1>
+  <p>סטודיו לגרפיקה</p>
+</header>
+
+<section class="clients" aria-labelledby="clientsTitle">
+  <h2 id="clientsTitle">לקוחות מרוצים</h2>
+  <div class="marquee"><div class="track" id="track"></div></div>
+</section>
+
+<main>
+  <div class="wall" id="wall" aria-label="עבודות"></div>
+  <div class="sentinel" id="sentinel"></div>
+  <p class="end" id="end" hidden>זה הכול לעכשיו</p>
+</main>
+
+<button class="cta" id="cta" type="button">ליצירת קשר</button>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dlg">
+    <button class="x" type="button" id="x" aria-label="סגירה">×</button>
+    <h3 id="dlgTitle">ציפי גרידינגר</h3>
+    <dl class="details">
+      <dt>פלאפון</dt><dd>0533.140626</dd>
+      <dt>מייל</dt><dd>ZS140626@GMAIL.COM</dd>
+    </dl>
+    <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="form">
+      <input type="hidden" name="form-name" value="contact">
+      <p class="hp"><label>לא למילוי <input name="bot-field" id="botField" tabindex="-1" autocomplete="off"></label></p>
+      <label for="fName">שם מלא<input id="fName" name="name" required autocomplete="name"></label>
+      <label for="fPhone">טלפון<input id="fPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" dir="ltr"></label>
+      <label for="fMail">מייל<input id="fMail" name="email" type="email" autocomplete="email" dir="ltr"></label>
+      <label for="fMsg">הודעה<textarea id="fMsg" name="message" required></textarea></label>
+      <p class="err" id="err" hidden></p>
+      <button class="send" type="submit" id="send">שלח</button>
+    </form>
+  </div>
+</dialog>
+
+<div class="lb" id="lb" hidden></div>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+/* ===== תוכן האתר =====
+   הנתונים נכתבים לכאן אוטומטית בזמן הבנייה (build.mjs), מתוך מה שהועלה בפאנל הניהול.
+   כל עוד אין תמונות, מוצגים מלבנים לדוגמה. */
+const DATA = /*DATA*/{"works":[],"logos":[]}/*END*/;
+const RATIOS=[[1,1],[4,5],[3,4],[2,3],[4,3],[3,2],[16,9],[9,16]];
+const TINTS=["#e7e4dd","#dfe3e6","#e6dfe0","#e1e4dc","#ebe6da","#dcdfe8"];
+const LOGOS = DATA.logos.length ? DATA.logos : Array.from({length:10},(_,i)=>({src:null,alt:"לוגו לקוח "+(i+1)}));
+const WORKS = DATA.works.length ? DATA.works : Array.from({length:48},(_,i)=>{const r=RATIOS[(i*5+3)%RATIOS.length];return {id:null,w:r[0],h:r[1],alt:"פרויקט "+String(i+1).padStart(2,"0")}});
+
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* --- סרט לוגואים --- */
+const track=document.getElementById("track");
+const logoSet=()=>{const d=document.createElement("div");d.className="logos";
+  LOGOS.forEach(l=>{if(l.src){const im=new Image();im.src=l.src;im.alt=l.alt;im.loading="lazy";im.height=44;d.append(im)}
+    else{const s=document.createElement("span");s.className="ph-logo";s.textContent=l.alt;d.append(s)}});return d};
+track.append(logoSet(),logoSet());
+track.children[1].setAttribute("aria-hidden","true");
+
+/* --- קיר עבודות: סדר אקראי בכל כניסה, טעינה בגלילה --- */
+const shuffled=[...WORKS].sort(()=>Math.random()-.5);
+const wall=document.getElementById("wall");
+const BATCH=12; let shown=0, cols=[], heights=[];
+
+function colCount(){const w=wall.clientWidth;return w<560?2:w<960?3:w<1400?4:5}
+function makeItem(w,i){
+  const f=document.createElement("figure");f.className="item";f.style.setProperty("--r",w.w+"/"+w.h);
+  if(w.id){f.innerHTML=`<picture><source type="image/avif" srcset="images/${w.id}-480.avif 480w, images/${w.id}-960.avif 960w" sizes="(max-width:560px) 50vw, (max-width:960px) 34vw, 25vw"><img src="images/${w.id}-960.webp" srcset="images/${w.id}-480.webp 480w, images/${w.id}-960.webp 960w" sizes="(max-width:560px) 50vw, (max-width:960px) 34vw, 25vw" width="${w.w}" height="${w.h}" alt="${esc(w.alt)}" loading="lazy" decoding="async"></picture>`}
+  else{f.innerHTML=`<div class="ph" style="background:${TINTS[i%TINTS.length]}">${esc(w.alt)}</div>`}
+  f.tabIndex=0;f.setAttribute("role","button");f.setAttribute("aria-label",w.alt+", הגדלה");
+  f.onclick=()=>openLb(w,i); f.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();openLb(w,i)}};
+  return f}
+function place(w,i){const k=heights.indexOf(Math.min(...heights));cols[k].append(makeItem(w,i));heights[k]+=w.h/w.w}
+function layout(){
+  wall.innerHTML="";const n=colCount();cols=[];heights=Array(n).fill(0);
+  for(let c=0;c<n;c++){const d=document.createElement("div");d.className="col";wall.append(d);cols.push(d)}
+  for(let i=0;i<shown;i++)place(shuffled[i],i)}
+function more(){
+  const next=Math.min(shown+BATCH,shuffled.length);
+  for(let i=shown;i<next;i++)place(shuffled[i],i);
+  shown=next; if(shown>=shuffled.length){io.disconnect();document.getElementById("end").hidden=false}}
+layout();
+const io=new IntersectionObserver(e=>{if(e[0].isIntersecting)more()},{rootMargin:"800px 0px"});
+more(); io.observe(document.getElementById("sentinel"));
+let lastN=colCount();addEventListener("resize",()=>{const n=colCount();if(n!==lastN){lastN=n;layout()}});
+
+/* --- הגדלת עבודה --- */
+const lb=document.getElementById("lb");
+function openLb(w,i){lb.style.setProperty("--r",w.w+"/"+w.h);
+  lb.innerHTML=w.id?`<img src="images/${w.id}-1920.webp" alt="${esc(w.alt)}">`:`<div class="ph" style="background:${TINTS[i%TINTS.length]}">${esc(w.alt)}</div>`;lb.hidden=false}
+lb.onclick=()=>lb.hidden=true;
+addEventListener("keydown",e=>{if(e.key==="Escape")lb.hidden=true});
+
+/* --- חלון יצירת קשר --- */
+const dlg=document.getElementById("dlg"),form=document.getElementById("form"),err=document.getElementById("err"),send=document.getElementById("send");
+document.getElementById("cta").onclick=()=>{err.hidden=true;dlg.showModal()};
+document.getElementById("x").onclick=()=>dlg.close();
+dlg.addEventListener("click",e=>{if(e.target===dlg)dlg.close()});
+function toast(t){const el=document.getElementById("toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,4000)}
+const LIVE=/zgstudio\.co\.il$|netlify\.app$/.test(location.hostname);
+form.addEventListener("submit",async e=>{
+  e.preventDefault();err.hidden=true;
+  const fd=new FormData(form);
+  if(!fd.get("phone")&&!fd.get("email")){err.textContent="צריך למלא טלפון או מייל, כדי שאוכל לחזור אליכם.";err.hidden=false;return}
+  send.disabled=true;send.textContent="שולח...";
+  try{
+    if(LIVE){const r=await fetch("/",{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:new URLSearchParams(fd).toString()});if(!r.ok)throw 0;
+      toast("ההודעה נשלחה. אחזור אליכם בהקדם.")}
+    else toast("תצוגה מקדימה: באתר האמיתי ההודעה תישלח למייל.");
+    form.reset();dlg.close();
+  }catch{err.textContent="ההודעה לא נשלחה. אפשר לנסות שוב או לפנות ישירות במייל או בטלפון.";err.hidden=false}
+  finally{send.disabled=false;send.textContent="שלח"}
+});
+</script>
+</body>
+</html>

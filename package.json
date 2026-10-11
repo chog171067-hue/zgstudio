@@ -1,0 +1,14 @@
+{
+  "name": "zgstudio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "sharp": "0.35.4"
+  },
+  "devDependencies": {
+    "netlify-plugin-cache": "1.0.3"
+  }
+}
