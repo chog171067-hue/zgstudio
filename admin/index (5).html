@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="he">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>ניהול האתר · ציפי גרידינגר</title>
+  <script>
+    // ההגדרות כתובות כאן ישירות, כדי שהפאנל לא יצטרך להוריד קובץ config.yml
+    // (סינונים כמו נטפרי עלולים לחסום קבצים מסוג yml)
+    window.CMS_MANUAL_INIT = true;
+  </script>
+</head>
+<body>
+  <script src="https://unpkg.com/@sveltia/cms@0.221.4/dist/sveltia-cms.js"></script>
+  <script>
+    CMS.init({ config: {
+      "backend": {
+        "name": "github",
+        "repo": "chog171067-hue/zgstudio",
+        "branch": "main",
+        "commit_messages": {
+          "update": "עדכון {{collection}}: {{slug}}",
+          "uploadMedia": "העלאת תמונה {{path}}"
+        }
+      },
+      "site_url": "https://zgstudio.co.il",
+      "display_url": "https://zgstudio.co.il",
+      "media_folder": "uploads",
+      "public_folder": "/uploads",
+      "media_libraries": {
+        "default": {
+          "config": {
+            "max_file_size": 30000000,
+            "transformations": {
+              "raster_image": {
+                "format": "webp",
+                "quality": 90,
+                "width": 2560,
+                "height": 2560
+              }
+            }
+          }
+        }
+      },
+      "collections": [
+        {
+          "name": "site",
+          "label": "תוכן האתר",
+          "files": [
+            {
+              "name": "works",
+              "label": "עבודות",
+              "file": "data/works.json",
+              "media_folder": "/uploads/works",
+              "public_folder": "/uploads/works",
+              "fields": [
+                {
+                  "name": "works",
+                  "label": "עבודות",
+                  "label_singular": "עבודה",
+                  "widget": "list",
+                  "add_to_top": true,
+                  "summary": "{{fields.title}}",
+                  "fields": [
+                    {
+                      "name": "image",
+                      "label": "תמונה",
+                      "widget": "image"
+                    },
+                    {
+                      "name": "title",
+                      "label": "שם הפרויקט (לא חובה)",
+                      "widget": "string",
+                      "required": false
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "clients",
+              "label": "לקוחות מרוצים",
+              "file": "data/clients.json",
+              "media_folder": "/uploads/logos",
+              "public_folder": "/uploads/logos",
+              "fields": [
+                {
+                  "name": "clients",
+                  "label": "לקוחות",
+                  "label_singular": "לקוח",
+                  "widget": "list",
+                  "summary": "{{fields.name}}",
+                  "fields": [
+                    {
+                      "name": "logo",
+                      "label": "לוגו (עדיף SVG או PNG שקוף)",
+                      "widget": "image"
+                    },
+                    {
+                      "name": "name",
+                      "label": "שם הלקוח",
+                      "widget": "string"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "load_config_file": false
+    } });
+  </script>
+</body>
+</html>
