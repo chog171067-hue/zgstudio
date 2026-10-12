@@ -81,6 +81,25 @@ const html = (await readFile("src/index.html", "utf8"))
   .replace("<!--PREVIEW-CUT-->\n", "");
 await writeFile(`${OUT}/index.html`, html);
 await cp("admin", `${OUT}/admin`, { recursive: true });
+// --- אייקונים, תמונת שיתוף, ומידע למנועי חיפוש ---
+await cp("static", OUT, { recursive: true });
+const first = (await readJson("data/works.json", "works")).find(w => w.image && local(w.image));
+if (first && (await exists(local(first.image)))) {
+  // התמונה שמופיעה כששולחים קישור לאתר בוואטסאפ, בפייסבוק וכו'
+  await sharp(await readFile(local(first.image))).rotate().resize(1200, 630, { fit: "cover", position: "attention" }).jpeg({ quality: 82 }).toFile(`${OUT}/og.jpg`);
+}
+const today = new Date().toISOString().slice(0, 10);
+await writeFile(`${OUT}/sitemap.xml`, `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://zgstudio.co.il/</loc><lastmod>${today}</lastmod></url>
+</urlset>
+`);
+await writeFile(`${OUT}/robots.txt`, `User-agent: *
+Disallow: /admin/
+
+Sitemap: https://zgstudio.co.il/sitemap.xml
+`);
+
 // מפה של תמונות ממוזערות לפאנל הניהול: נתיב הקובץ שהועלה ← התמונה הקטנה באתר
 await writeFile(`${OUT}/admin/thumbs.json`, JSON.stringify(thumbs));
 
