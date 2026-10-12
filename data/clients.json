@@ -1,3 +1,44 @@
 {
-  "clients": []
+  "clients": [
+    {
+      "logo": "/uploads/logos/2026-10-13-013332-mv5u0c6me0u.png",
+      "name": "ת\"ת יסודי התורה - ת\"א"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012647-mv5u0c86ilm.png",
+      "name": "ביה\"ס נוה מאיר - ב\"ב"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012725-mv5u0c8xpkq.png",
+      "name": "ביה\"ס מרכז - ב\"ב"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012142-mv5u0cacafg.png",
+      "name": "ת\"ת ברכת יעקב - פ\"ת"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012215-mv5u0cawqsf.png",
+      "name": "ארגוני נוער - עיריית ירושלים"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012236-mv5u0cbtrlg.png",
+      "name": "סמינר דרכי חנה - אלעד"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012301-mv5u0ccpxq0.png",
+      "name": "ביה\"ס סלונים - קרית גת"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012322-mv5u0cd8sbv.png",
+      "name": "איגוד בני הישיבות - נוה יעקב"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012256-mv5u0cev27j.png",
+      "name": "ת\"ת אילת השחר - בית שמש"
+    },
+    {
+      "logo": "/uploads/logos/2026-10-13-012250-mv5u0cgawvm.png",
+      "name": "ביה\"ס נווה גרשון - ירושלים"
+    }
+  ]
 }
