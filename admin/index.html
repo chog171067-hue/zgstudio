@@ -1,116 +1,356 @@
 <!doctype html>
-<html lang="he">
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex">
-  <title>ניהול האתר · ציפי גרידינגר</title>
-  <script>
-    // ההגדרות כתובות כאן ישירות, כדי שהפאנל לא יצטרך להוריד קובץ config.yml
-    // (סינונים כמו נטפרי עלולים לחסום קבצים מסוג yml)
-    window.CMS_MANUAL_INIT = true;
-  </script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>ניהול האתר · ציפי גרידינגר</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;500&family=IBM+Plex+Sans+Hebrew:wght@400;500&display=swap">
+<style>
+/* פאנל ניהול: עמודה אחת, אזור גרירה גדול, רשת תמונות עם ✕, כפתור שמירה קבוע למטה */
+:root{
+  --paper:#fafaf8; --ink:#1a1b1e; --muted:#6f7278; --line:#e3e3df; --tile:#ecebe7;
+  --accent:#1f3fd1; --new:#1d7a46; --danger:#b3261e;
+  --display:"Frank Ruhl Libre","David Libre",David,Georgia,serif;
+  --body:"IBM Plex Sans Hebrew","Arial Hebrew",Arial,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1rem/1.6 var(--body);direction:rtl;padding-inline:16px}
+.wrap{max-width:1100px;margin-inline:auto;padding-block:32px 140px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1{font:400 clamp(1.8rem,4vw,2.4rem)/1.1 var(--display);margin:0}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.top a,.link{color:var(--muted);font-size:.9rem;background:none;border:0;cursor:pointer;font-family:inherit;text-decoration:underline;padding:0}
+button{font-family:inherit}
+
+/* כניסה */
+.login{max-width:440px;margin:64px auto;display:grid;gap:14px}
+.login p{margin:0;color:var(--muted)}
+input[type=password],input[type=text]{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:#fff;width:100%}
+.btn{background:var(--ink);color:var(--paper);border:0;border-radius:999px;padding:12px 24px;font-size:1rem;font-weight:500;cursor:pointer}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+.msg{padding:10px 14px;border-radius:6px;background:#fdecea;color:var(--danger);font-size:.95rem}
+.msg.ok{background:#e6f4ea;color:var(--new)}
+
+/* לשוניות */
+.tabs{display:flex;gap:8px;margin:24px 0}
+.tab{border:1px solid var(--line);background:none;border-radius:999px;padding:8px 20px;font-size:1rem;cursor:pointer;color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.count{font-size:.85rem;opacity:.75}
+
+/* אזור גרירה */
+.drop{border:2px dashed #c9c9c3;border-radius:10px;padding:36px 16px;text-align:center;cursor:pointer;background:#fff;transition:border-color .2s,background .2s}
+.drop:hover,.drop.over{border-color:var(--accent);background:#f4f6fe}
+.drop strong{display:block;font-size:1.15rem;margin-bottom:4px}
+.drop span{color:var(--muted);font-size:.9rem}
+
+/* רשת */
+.hint{color:var(--muted);font-size:.9rem;margin:24px 0 12px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.card{position:relative;background:var(--tile);border-radius:6px;overflow:hidden;aspect-ratio:1;display:flex;flex-direction:column}
+.card img{width:100%;height:100%;object-fit:cover;flex:1;min-height:0}
+.card.logo img{object-fit:contain;padding:14px;background:#fff}
+.card .x{position:absolute;top:6px;left:6px;width:32px;height:32px;border-radius:50%;border:0;background:rgba(255,255,255,.92);color:var(--danger);font-size:1.2rem;line-height:1;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.card .x:hover{background:var(--danger);color:#fff}
+.badge{position:absolute;top:8px;right:8px;background:var(--new);color:#fff;font-size:.75rem;padding:2px 8px;border-radius:999px}
+.card input{border:0;border-top:1px solid var(--line);border-radius:0;font-size:.85rem;padding:6px 8px}
+.empty{color:var(--muted);text-align:center;padding:32px 0}
+
+/* סרגל שמירה */
+.bar{position:fixed;inset-inline:0;bottom:0;background:#fff;border-top:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 20px rgba(0,0,0,.06)}
+.bar .in{max-width:1100px;margin-inline:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bar .status{color:var(--muted);font-size:.95rem}
+.bar .acts{display:flex;gap:8px}
+</style>
 </head>
 <body>
-  <script src="https://unpkg.com/@sveltia/cms@0.221.4/dist/sveltia-cms.js"></script>
-  <script>
-    CMS.init({ config: {
-      "backend": {
-        "name": "github",
-        "repo": "chog171067-hue/zgstudio",
-        "branch": "main",
-        "commit_messages": {
-          "update": "עדכון {{collection}}: {{slug}}",
-          "uploadMedia": "העלאת תמונה {{path}}"
-        }
-      },
-      "site_url": "https://zgstudio.co.il",
-      "display_url": "https://zgstudio.co.il",
-      "media_folder": "uploads",
-      "public_folder": "/uploads",
-      "media_libraries": {
-        "default": {
-          "config": {
-            "max_file_size": 30000000,
-            "transformations": {
-              "raster_image": {
-                "format": "webp",
-                "quality": 90,
-                "width": 2560,
-                "height": 2560
-              }
-            }
-          }
-        }
-      },
-      "collections": [
-        {
-          "name": "site",
-          "label": "תוכן האתר",
-          "files": [
-            {
-              "name": "works",
-              "label": "עבודות",
-              "file": "data/works.json",
-              "media_folder": "/uploads/works",
-              "public_folder": "/uploads/works",
-              "fields": [
-                {
-                  "name": "works",
-                  "label": "עבודות",
-                  "label_singular": "עבודה",
-                  "widget": "list",
-                  "add_to_top": true,
-                  "summary": "{{fields.title}}",
-                  "fields": [
-                    {
-                      "name": "image",
-                      "label": "תמונה",
-                      "widget": "image"
-                    },
-                    {
-                      "name": "title",
-                      "label": "שם הפרויקט (לא חובה)",
-                      "widget": "string",
-                      "required": false
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "name": "clients",
-              "label": "לקוחות מרוצים",
-              "file": "data/clients.json",
-              "media_folder": "/uploads/logos",
-              "public_folder": "/uploads/logos",
-              "fields": [
-                {
-                  "name": "clients",
-                  "label": "לקוחות",
-                  "label_singular": "לקוח",
-                  "widget": "list",
-                  "summary": "{{fields.name}}",
-                  "fields": [
-                    {
-                      "name": "logo",
-                      "label": "לוגו (עדיף SVG או PNG שקוף)",
-                      "widget": "image"
-                    },
-                    {
-                      "name": "name",
-                      "label": "שם הלקוח",
-                      "widget": "string"
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ],
-      "load_config_file": false
-    } });
-  </script>
+<div class="wrap">
+  <div class="top">
+    <h1>ניהול האתר</h1>
+    <span><a href="/" target="_blank" rel="noopener">לצפייה באתר ↗</a> &nbsp; <button class="link" id="logout" hidden>התנתקות</button></span>
+  </div>
+
+  <!-- כניסה -->
+  <section class="login" id="loginBox" hidden>
+    <p>כדי להיכנס, מדביקים את המפתח של GitHub (מתחיל ב-<span dir="ltr">github_pat_</span>). צריך לעשות את זה רק פעם אחת בכל מחשב.</p>
+    <label for="tokenInput" hidden>מפתח GitHub</label>
+    <input type="password" id="tokenInput" dir="ltr" placeholder="github_pat_..." autocomplete="off">
+    <button class="btn" id="loginBtn">כניסה</button>
+    <div class="msg" id="loginMsg" hidden></div>
+  </section>
+
+  <!-- פאנל -->
+  <section id="panel" hidden>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="works">עבודות <span class="count" id="cWorks"></span></button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="clients">לקוחות מרוצים <span class="count" id="cClients"></span></button>
+    </div>
+
+    <div class="drop" id="drop" tabindex="0" role="button">
+      <strong id="dropTitle">גררו לכאן תמונות של עבודות</strong>
+      <span>או לחצו כאן לבחירה מהמחשב. אפשר לבחור כמה תמונות ביחד.</span>
+    </div>
+    <input type="file" id="file" accept="image/*" multiple hidden>
+    <div class="msg" id="panelMsg" hidden></div>
+
+    <p class="hint" id="hint">כל העבודות שבאתר. לחיצה על ✕ מסירה עבודה.</p>
+    <div class="grid" id="grid"></div>
+  </section>
+</div>
+
+<div class="bar" id="bar" hidden>
+  <div class="in">
+    <span class="status" id="status">אין שינויים</span>
+    <span class="acts">
+      <button class="btn ghost" id="undo" disabled>ביטול שינויים</button>
+      <button class="btn" id="save" disabled>שמירה ופרסום</button>
+    </span>
+  </div>
+</div>
+
+<script>
+const OWNER = "chog171067-hue", REPO = "zgstudio", BRANCH = "main";
+const MAX_SIDE = 2560, LOGO_MAX_H = 600;
+const $ = id => document.getElementById(id);
+
+let token = "", tab = "works", thumbs = {};
+let data = { works: [], clients: [] };      // מה שיש עכשיו ב-GitHub
+let items = { works: [], clients: [] };     // מה שמוצג בפאנל (כולל שינויים)
+let sha = { works: "", clients: "" };
+
+const store = {
+  get(){ try { return localStorage.getItem("zg_token") || ""; } catch { return ""; } },
+  set(v){ try { localStorage.setItem("zg_token", v); } catch {} },
+  del(){ try { localStorage.removeItem("zg_token"); } catch {} }
+};
+
+async function api(path, opts = {}) {
+  const r = await fetch(`https://api.github.com/repos/${OWNER}/${REPO}${path}`, {
+    ...opts,
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/vnd.github+json", ...(opts.body ? { "Content-Type": "application/json" } : {}) }
+  });
+  if (!r.ok) { const e = new Error(r.status); e.status = r.status; throw e; }
+  return r.status === 204 ? null : r.json();
+}
+const b64ToText = b => new TextDecoder().decode(Uint8Array.from(atob(b.replace(/\n/g, "")), c => c.charCodeAt(0)));
+const blobToB64 = blob => new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result.split(",")[1]); fr.readAsDataURL(blob); });
+
+function show(el, text, ok) { el.textContent = text; el.className = "msg" + (ok ? " ok" : ""); el.hidden = !text; }
+
+/* ---------- כניסה ---------- */
+async function login(t) {
+  token = t.trim();
+  show($("loginMsg"), "");
+  try {
+    await api("");
+    store.set(token);
+    $("loginBox").hidden = true; $("panel").hidden = false; $("bar").hidden = false; $("logout").hidden = false;
+    await load();
+  } catch (e) {
+    $("loginBox").hidden = false;
+    show($("loginMsg"), e.status === 401 || e.status === 404
+      ? "המפתח לא תקין, או שאין לו גישה ל-zgstudio. כדאי לבדוק שהעתקת אותו במלואו."
+      : "אין חיבור ל-GitHub. כדאי לבדוק את החיבור לאינטרנט, או שהכתובת api.github.com פתוחה בסינון.");
+  }
+}
+$("loginBtn").onclick = () => login($("tokenInput").value);
+$("tokenInput").onkeydown = e => { if (e.key === "Enter") login(e.target.value); };
+$("logout").onclick = () => { store.del(); location.reload(); };
+
+/* ---------- טעינה ---------- */
+async function readJson(path, key) {
+  try {
+    const f = await api(`/contents/${path}?ref=${BRANCH}`);
+    return { list: JSON.parse(b64ToText(f.content))[key] || [], sha: f.sha };
+  } catch (e) { if (e.status === 404) return { list: [], sha: "" }; throw e; }
+}
+async function load() {
+  try { thumbs = await (await fetch("/admin/thumbs.json", { cache: "no-store" })).json(); } catch { thumbs = {}; }
+  const [w, c] = await Promise.all([readJson("data/works.json", "works"), readJson("data/clients.json", "clients")]);
+  data.works = w.list; sha.works = w.sha; data.clients = c.list; sha.clients = c.sha;
+  reset();
+}
+function reset() {
+  items.works = data.works.map(x => ({ ...x }));
+  items.clients = data.clients.map(x => ({ ...x }));
+  render();
+}
+
+/* ---------- תצוגה ---------- */
+const srcOf = it => it.url || (thumbs[it.image || it.logo] ? "/" + thumbs[it.image || it.logo]
+  : `https://raw.githubusercontent.com/${OWNER}/${REPO}/${BRANCH}/${(it.image || it.logo).replace(/^\//, "")}`);
+
+function render() {
+  const list = items[tab];
+  $("cWorks").textContent = `(${items.works.length})`;
+  $("cClients").textContent = `(${items.clients.length})`;
+  $("dropTitle").textContent = tab === "works" ? "גררו לכאן תמונות של עבודות" : "גררו לכאן לוגואים של לקוחות";
+  $("hint").textContent = tab === "works" ? "כל העבודות שבאתר. לחיצה על ✕ מסירה עבודה."
+    : "כל הלוגואים שבאתר. כדאי לכתוב מתחת לכל לוגו את שם הלקוח. לחיצה על ✕ מסירה לוגו.";
+  const g = $("grid"); g.innerHTML = "";
+  if (!list.length) { g.innerHTML = `<p class="empty">עדיין אין כאן כלום. אפשר להתחיל בגרירת תמונות לאזור שלמעלה.</p>`; }
+  list.forEach((it, i) => {
+    const d = document.createElement("div");
+    d.className = "card" + (tab === "clients" ? " logo" : "");
+    const img = new Image(); img.loading = "lazy"; img.alt = it.title || it.name || ""; img.src = srcOf(it);
+    d.append(img);
+    if (it.file) { const b = document.createElement("span"); b.className = "badge"; b.textContent = "חדש"; d.append(b); }
+    if (tab === "clients") {
+      const inp = document.createElement("input"); inp.type = "text"; inp.value = it.name || ""; inp.placeholder = "שם הלקוח";
+      inp.setAttribute("aria-label", "שם הלקוח"); inp.oninput = () => { it.name = inp.value; updateBar(); };
+      d.append(inp);
+    }
+    const x = document.createElement("button"); x.className = "x"; x.textContent = "✕";
+    x.setAttribute("aria-label", "הסרה"); x.title = "הסרה";
+    x.onclick = () => { list.splice(i, 1); render(); };
+    d.append(x);
+    g.append(d);
+  });
+  updateBar();
+}
+
+function changes() {
+  const out = [];
+  for (const k of ["works", "clients"]) {
+    const key = k === "works" ? "image" : "logo";
+    const before = new Set(data[k].map(x => x[key])), after = new Set(items[k].map(x => x[key]));
+    const added = items[k].filter(x => x.file).length;
+    const removed = [...before].filter(p => !after.has(p)).length;
+    const renamed = k === "clients" && items[k].some(x => !x.file && data[k].find(d => d.logo === x.logo)?.name !== x.name);
+    if (added || removed || renamed) out.push({ k, added, removed, renamed });
+  }
+  return out;
+}
+function updateBar() {
+  const ch = changes();
+  const parts = [];
+  const T = {
+    works:   { add1: "עבודה חדשה אחת", addN: n => `${n} עבודות חדשות`, rem1: "עבודה אחת תוסר", remN: n => `${n} עבודות יוסרו` },
+    clients: { add1: "לוגו חדש אחד",   addN: n => `${n} לוגואים חדשים`, rem1: "לוגו אחד יוסר",  remN: n => `${n} לוגואים יוסרו` }
+  };
+  ch.forEach(c => {
+    const t = T[c.k];
+    if (c.added) parts.push(c.added === 1 ? t.add1 : t.addN(c.added));
+    if (c.removed) parts.push(c.removed === 1 ? t.rem1 : t.remN(c.removed));
+    if (c.renamed) parts.push("שמות לקוחות השתנו");
+  });
+  $("status").textContent = parts.length ? "לא נשמר: " + parts.join(", ") : "אין שינויים";
+  $("save").disabled = $("undo").disabled = !parts.length;
+}
+
+/* ---------- לשוניות ---------- */
+document.querySelectorAll(".tab").forEach(b => b.onclick = () => {
+  tab = b.dataset.tab;
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === b));
+  show($("panelMsg"), ""); render();
+});
+
+/* ---------- הוספת תמונות ---------- */
+const drop = $("drop"), fileInput = $("file");
+drop.onclick = () => fileInput.click();
+drop.onkeydown = e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); } };
+drop.ondragover = e => { e.preventDefault(); drop.classList.add("over"); };
+drop.ondragleave = () => drop.classList.remove("over");
+drop.ondrop = e => { e.preventDefault(); drop.classList.remove("over"); addFiles([...e.dataTransfer.files]); };
+fileInput.onchange = () => { addFiles([...fileInput.files]); fileInput.value = ""; };
+
+function slug(name) {
+  const base = name.replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+  return (base || (tab === "works" ? "work" : "logo")) + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
+}
+async function shrink(file, maxW, maxH, type, q) {
+  const bmp = await createImageBitmap(file);
+  const s = Math.min(1, maxW / bmp.width, maxH / bmp.height);
+  const c = document.createElement("canvas");
+  c.width = Math.round(bmp.width * s); c.height = Math.round(bmp.height * s);
+  c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+  let blob = await new Promise(r => c.toBlob(r, type, q));
+  if (!blob || blob.type !== type) blob = await new Promise(r => c.toBlob(r, type === "image/webp" ? "image/jpeg" : "image/png", q));
+  return blob;
+}
+async function addFiles(files) {
+  const bad = [];
+  const target = tab, list = items[target];
+  show($("panelMsg"), files.length > 1 ? `מכין ${files.length} תמונות...` : "מכין את התמונה...", true);
+  for (const f of files) {
+    try {
+      let blob, ext;
+      if (f.type === "image/svg+xml") { if (target !== "clients") throw 0; blob = f; ext = "svg"; }
+      else if (target === "works") { blob = await shrink(f, MAX_SIDE, MAX_SIDE, "image/webp", .9); }
+      else { blob = await shrink(f, 4000, LOGO_MAX_H, "image/png"); }
+      ext = ext || ({ "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" })[blob.type];
+      const path = `/uploads/${target === "works" ? "works" : "logos"}/${slug(f.name)}.${ext}`;
+      const it = { file: blob, url: URL.createObjectURL(blob) };
+      if (target === "works") { it.image = path; list.unshift(it); }
+      else { it.logo = path; it.name = f.name.replace(/\.[^.]+$/, ""); list.push(it); }
+    } catch { bad.push(f.name); }
+  }
+  show($("panelMsg"), bad.length ? `לא הצלחתי לפתוח: ${bad.join(", ")}. אפשר להעלות רק קבצי תמונה (JPG, PNG, WebP${target === "clients" ? ", SVG" : ""}).` : "");
+  render();
+}
+
+/* ---------- שמירה: הכול נשמר ב-GitHub בפעולה אחת ---------- */
+$("undo").onclick = () => { reset(); show($("panelMsg"), ""); };
+$("save").onclick = save;
+async function save() {
+  const btn = $("save"); btn.disabled = $("undo").disabled = true;
+  const st = $("status");
+  try {
+    if (items.clients.some(c => !String(c.name || "").trim())) {
+      tab = "clients"; document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x.dataset.tab === "clients")); render();
+      show($("panelMsg"), "חסר שם לאחד הלקוחות. כדאי למלא את השם מתחת ללוגו ואז לשמור שוב."); return;
+    }
+    st.textContent = "שומר...";
+    const ref = await api(`/git/ref/heads/${BRANCH}`);
+    const head = ref.object.sha;
+    const commit = await api(`/git/commits/${head}`);
+    const tree = [];
+    const newOnes = [...items.works, ...items.clients].filter(x => x.file);
+    let n = 0;
+    for (const it of newOnes) {
+      st.textContent = `מעלה תמונה ${++n} מתוך ${newOnes.length}...`;
+      const b = await api("/git/blobs", { method: "POST", body: JSON.stringify({ content: await blobToB64(it.file), encoding: "base64" }) });
+      tree.push({ path: (it.image || it.logo).replace(/^\//, ""), mode: "100644", type: "blob", sha: b.sha });
+    }
+    const clean = {
+      works: items.works.map(({ image, title }) => title ? { image, title } : { image }),
+      clients: items.clients.map(({ logo, name }) => ({ logo, name: String(name).trim() }))
+    };
+    tree.push({ path: "data/works.json", mode: "100644", type: "blob", content: JSON.stringify({ works: clean.works }, null, 2) + "\n" });
+    tree.push({ path: "data/clients.json", mode: "100644", type: "blob", content: JSON.stringify({ clients: clean.clients }, null, 2) + "\n" });
+    // קבצים שהוסרו נמחקים גם מהתיקייה, כדי לא לצבור קבצים מיותרים
+    const keep = new Set([...clean.works.map(x => x.image), ...clean.clients.map(x => x.logo)]);
+    [...data.works.map(x => x.image), ...data.clients.map(x => x.logo)]
+      .filter(p => p && !keep.has(p) && p.startsWith("/uploads/"))
+      .forEach(p => tree.push({ path: p.slice(1), mode: "100644", type: "blob", sha: null }));
+
+    st.textContent = "שומר...";
+    const t = await api("/git/trees", { method: "POST", body: JSON.stringify({ base_tree: commit.tree.sha, tree }) });
+    const c = await api("/git/commits", { method: "POST", body: JSON.stringify({ message: "עדכון תוכן מפאנל הניהול", tree: t.sha, parents: [head] }) });
+    await api(`/git/refs/heads/${BRANCH}`, { method: "PATCH", body: JSON.stringify({ sha: c.sha }) });
+
+    data.works = clean.works; data.clients = clean.clients;
+    items.works.forEach(x => { delete x.file; });
+    items.clients.forEach(x => { delete x.file; });
+    show($("panelMsg"), "נשמר! האתר יתעדכן בעוד דקה או שתיים.", true);
+    updateBar();
+  } catch (e) {
+    show($("panelMsg"), e.status === 409 || e.status === 422
+      ? "מישהו אחר עדכן את האתר בינתיים. כדאי לרענן את הדף (F5) ולנסות שוב."
+      : "השמירה לא הצליחה. השינויים שלך עדיין כאן, אפשר לנסות שוב. אם זה חוזר, כדאי לבדוק את החיבור לאינטרנט.");
+    updateBar();
+  }
+}
+addEventListener("beforeunload", e => { if (!$("save").disabled) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ---------- התחלה ---------- */
+const saved = store.get();
+if (saved) login(saved); else $("loginBox").hidden = false;
+</script>
 </body>
 </html>

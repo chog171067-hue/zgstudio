@@ -23,6 +23,8 @@ await mkdir(`${OUT}/images`, { recursive: true });
 await mkdir(`${OUT}/logos`, { recursive: true });
 await mkdir(CACHE, { recursive: true });
 
+const thumbs = {};
+
 // --- עבודות ---
 const works = [];
 for (const w of await readJson("data/works.json", "works")) {
@@ -50,6 +52,7 @@ for (const w of await readJson("data/works.json", "works")) {
     }
   }
   works.push({ id, w: width, h: height, alt: w.title || "עבודה של ציפי גרידינגר" });
+  thumbs[w.image] = `images/${id}-480.webp`;
 }
 
 // --- לוגואים ---
@@ -63,7 +66,9 @@ for (const c of await readJson("data/clients.json", "clients")) {
   if (file.toLowerCase().endsWith(".svg")) {
     await writeFile(`${OUT}/logos/${id}.svg`, buf);
     logos.push({ src: `logos/${id}.svg`, alt: c.name || "" });
+    thumbs[c.logo] = `logos/${id}.svg`;
   } else {
+    thumbs[c.logo] = `logos/${id}.webp`;
     await sharp(buf).resize({ height: LOGO_H, withoutEnlargement: true }).webp({ quality: 90 }).toFile(`${OUT}/logos/${id}.webp`);
     logos.push({ src: `logos/${id}.webp`, alt: c.name || "" });
   }
@@ -76,5 +81,7 @@ const html = (await readFile("src/index.html", "utf8"))
   .replace("<!--PREVIEW-CUT-->\n", "");
 await writeFile(`${OUT}/index.html`, html);
 await cp("admin", `${OUT}/admin`, { recursive: true });
+// מפה של תמונות ממוזערות לפאנל הניהול: נתיב הקובץ שהועלה ← התמונה הקטנה באתר
+await writeFile(`${OUT}/admin/thumbs.json`, JSON.stringify(thumbs));
 
 console.log(`האתר נבנה: ${works.length} עבודות, ${logos.length} לוגואים`);
