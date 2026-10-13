@@ -115,7 +115,7 @@ input[type=password],input[type=text]{font:inherit;padding:10px 12px;border:1px 
 
 <script>
 const OWNER = "chog171067-hue", REPO = "zgstudio", BRANCH = "main";
-const MAX_SIDE = 2560, LOGO_MAX_H = 600;
+const MAX_SIDE = 2560, LOGO_MAX_H = 600, GIF_MAX_MB = 25;
 const $ = id => document.getElementById(id);
 
 let token = "", tab = "works", thumbs = {};
@@ -274,13 +274,15 @@ async function shrink(file, maxW, maxH, type, q) {
   return blob;
 }
 async function addFiles(files) {
-  const bad = [];
+  const bad = [], big = [];
   const target = tab, list = items[target];
   show($("panelMsg"), files.length > 1 ? `מכין ${files.length} תמונות...` : "מכין את התמונה...", true);
   for (const f of files) {
     try {
       let blob, ext;
       if (f.type === "image/svg+xml") { if (target !== "clients") throw 0; blob = f; ext = "svg"; }
+      // GIF עולה כמו שהוא, כדי לשמור על האנימציה. בבניית האתר הוא הופך לסרטון MP4 קל
+      else if (f.type === "image/gif" && target === "works") { if (f.size > GIF_MAX_MB * 1048576) { big.push(f.name); continue; } blob = f; ext = "gif"; }
       else if (target === "works") { blob = await shrink(f, MAX_SIDE, MAX_SIDE, "image/webp", .9); }
       else { blob = await shrink(f, 4000, LOGO_MAX_H, "image/png"); }
       ext = ext || ({ "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" })[blob.type];
@@ -290,7 +292,10 @@ async function addFiles(files) {
       else { it.logo = path; it.name = f.name.replace(/\.[^.]+$/, ""); list.push(it); }
     } catch { bad.push(f.name); }
   }
-  show($("panelMsg"), bad.length ? `לא הצלחתי לפתוח: ${bad.join(", ")}. אפשר להעלות רק קבצי תמונה (JPG, PNG, WebP${target === "clients" ? ", SVG" : ""}).` : "");
+  show($("panelMsg"), [
+    bad.length ? `לא הצלחתי לפתוח: ${bad.join(", ")}. אפשר להעלות רק קבצי תמונה (JPG, PNG, WebP, ${target === "clients" ? "SVG" : "GIF"}).` : "",
+    big.length ? `הקובץ גדול מדי: ${big.join(", ")}. אפשר להעלות GIF עד ${GIF_MAX_MB}MB.` : ""
+  ].filter(Boolean).join(" "));
   render();
 }
 
