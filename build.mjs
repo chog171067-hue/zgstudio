@@ -1,7 +1,10 @@
 // בונה את האתר לתיקייה dist:
 // לוקח את התמונות שהועלו בפאנל, יוצר מכל אחת גרסאות AVIF ו-WebP בכמה גדלים,
-// וכותב את רשימת העבודות והלוגואים לתוך index.html.
+// הופך כל GIF לסרטון MP4 קל שרץ בלופ, וכותב את רשימת העבודות והלוגואים לתוך index.html.
 import sharp from "sharp";
+import ffmpeg from "ffmpeg-static";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
 import { createHash } from "node:crypto";
 import { readFile, writeFile, mkdir, cp, rm, access } from "node:fs/promises";
 import path from "node:path";
@@ -17,6 +20,12 @@ const readJson = async (f, key) => {
 const exists = p => access(p).then(() => true, () => false);
 const local = src => path.join(".", decodeURI(src).replace(/^\/+/, ""));
 const hash = buf => createHash("sha1").update(buf).digest("hex").slice(0, 12);
+const run = promisify(execFile);
+
+// GIF ← MP4: בלי קול, רוחב עד 1280, רקע לבן מאחורי שקיפות (MP4 לא תומך בשקיפות)
+const toMp4 = (src, out) => run(ffmpeg, ["-y", "-loglevel", "error", "-i", src, "-f", "lavfi", "-i", "color=c=white",
+  "-filter_complex", "[1][0]scale2ref[bg][v];[bg][v]overlay=shortest=1,scale='trunc(min(1280,iw)/2)*2':-2:flags=lanczos,setsar=1,format=yuv420p",
+  "-an", "-c:v", "libx264", "-preset", "slow", "-crf", "24", "-movflags", "+faststart", out]);
 
 await rm(OUT, { recursive: true, force: true });
 await mkdir(`${OUT}/images`, { recursive: true });
@@ -51,7 +60,14 @@ for (const w of await readJson("data/works.json", "works")) {
       await cp(cached, `${OUT}/images/${name}`);
     }
   }
-  works.push({ id, w: width, h: height, alt: w.title || "עבודה של ציפי גרידינגר" });
+  // GIF: התמונות שנוצרו למעלה (מהפריים הראשון) משמשות כתמונת פתיחה, והאנימציה עצמה עוברת ל-MP4
+  const video = file.toLowerCase().endsWith(".gif");
+  if (video) {
+    const cached = `${CACHE}/${id}.mp4`;
+    if (!(await exists(cached))) { await toMp4(file, cached); console.log("נוצר", `${id}.mp4`); }
+    await cp(cached, `${OUT}/images/${id}.mp4`);
+  }
+  works.push({ id, w: width, h: height, alt: w.title || "עבודה של ציפי גרידינגר", ...(video && { v: 1 }) });
   thumbs[w.image] = `images/${id}-480.webp`;
 }
 
