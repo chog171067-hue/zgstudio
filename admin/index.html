@@ -287,7 +287,7 @@ async function addFiles(files) {
       else { blob = await shrink(f, 4000, LOGO_MAX_H, "image/png"); }
       ext = ext || ({ "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" })[blob.type];
       const path = `/uploads/${target === "works" ? "works" : "logos"}/${slug(f.name)}.${ext}`;
-      const it = { file: blob, url: URL.createObjectURL(blob) };
+      const it = { file: blob, url: URL.createObjectURL(blob), orig: f.name };
       if (target === "works") { it.image = path; list.unshift(it); }
       else { it.logo = path; it.name = f.name.replace(/\.[^.]+$/, ""); list.push(it); }
     } catch { bad.push(f.name); }
@@ -319,8 +319,12 @@ async function save() {
     let n = 0;
     for (const it of newOnes) {
       st.textContent = `מעלה תמונה ${++n} מתוך ${newOnes.length}...`;
-      const b = await api("/git/blobs", { method: "POST", body: JSON.stringify({ content: await blobToB64(it.file), encoding: "base64" }) });
-      tree.push({ path: (it.image || it.logo).replace(/^\//, ""), mode: "100644", type: "blob", sha: b.sha });
+      // תמונה שכבר עלתה בניסיון קודם לא עולה שוב, כך שאחרי תקלה ממשיכים מאיפה שנעצרנו
+      if (!it.sha) {
+        try { it.sha = (await api("/git/blobs", { method: "POST", body: JSON.stringify({ content: await blobToB64(it.file), encoding: "base64" }) })).sha; }
+        catch (e) { e.file = `${it.orig || (it.image || it.logo).split("/").pop()} (${(it.file.size / 1048576).toFixed(1)}MB)`; throw e; }
+      }
+      tree.push({ path: (it.image || it.logo).replace(/^\//, ""), mode: "100644", type: "blob", sha: it.sha });
     }
     const clean = {
       works: items.works.map(({ image, title }) => title ? { image, title } : { image }),
@@ -340,13 +344,15 @@ async function save() {
     await api(`/git/refs/heads/${BRANCH}`, { method: "PATCH", body: JSON.stringify({ sha: c.sha }) });
 
     data.works = clean.works; data.clients = clean.clients;
-    items.works.forEach(x => { delete x.file; });
-    items.clients.forEach(x => { delete x.file; });
+    items.works.forEach(x => { delete x.file; delete x.sha; });
+    items.clients.forEach(x => { delete x.file; delete x.sha; });
     show($("panelMsg"), "נשמר! האתר יתעדכן בעוד דקה או שתיים.", true);
     updateBar();
   } catch (e) {
     show($("panelMsg"), e.status === 409 || e.status === 422
       ? "מישהו אחר עדכן את האתר בינתיים. כדאי לרענן את הדף (F5) ולנסות שוב."
+      : e.file
+      ? `השמירה נעצרה בקובץ ${e.file}. התמונות שכבר עלו נשמרו בצד, ולחיצה נוספת על השמירה תמשיך מהקובץ הזה. אם זה חוזר על אותו קובץ, כדאי להסיר אותו (✕) ולשמור בלעדיו, או לנסות מרשת אחרת: סינון אינטרנט (כמו נטפרי) או קובץ גדול מאוד יכולים לחסום את ההעלאה.`
       : "השמירה לא הצליחה. השינויים שלך עדיין כאן, אפשר לנסות שוב. אם זה חוזר, כדאי לבדוק את החיבור לאינטרנט.");
     updateBar();
   }
