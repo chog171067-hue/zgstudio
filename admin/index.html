@@ -281,7 +281,7 @@ async function addFiles(files) {
     try {
       let blob, ext;
       if (f.type === "image/svg+xml") { if (target !== "clients") throw 0; blob = f; ext = "svg"; }
-      // GIF עולה כמו שהוא, כדי לשמור על האנימציה. בבניית האתר הוא הופך לסרטון MP4 קל
+      // GIF עולה ומוצג באתר כמו שהוא, כדי לשמור על האנימציה
       else if (f.type === "image/gif" && target === "works") { if (f.size > GIF_MAX_MB * 1048576) { big.push(f.name); continue; } blob = f; ext = "gif"; }
       else if (target === "works") { blob = await shrink(f, MAX_SIDE, MAX_SIDE, "image/webp", .9); }
       else { blob = await shrink(f, 4000, LOGO_MAX_H, "image/png"); }
