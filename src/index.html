@@ -39,10 +39,10 @@ body{margin:0;direction:rtl;background:var(--paper);color:var(--ink);font:400 1r
 img{max-width:100%;display:block}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 
-/* כותרת */
-.hero{text-align:center;padding-block:clamp(64px,12vw,140px) clamp(40px,6vw,64px)}
-.hero h1{font:400 clamp(2.6rem,8vw,5.6rem)/1 var(--display);margin:0;letter-spacing:-.01em}
-.hero p{margin:18px 0 0;font-size:clamp(.95rem,1.6vw,1.15rem);letter-spacing:.32em;color:var(--muted)}
+/* כותרת: באנר ברוחב מלא, יחס 3:1 */
+.hero{margin-inline:calc(-1 * clamp(16px,4vw,48px))}
+.hero h1{margin:0}
+.hero img{width:100%;height:auto;aspect-ratio:3/1;background:#0b0b14}
 
 /* סרט לקוחות: רקע לבן מלא, כדי שהרקע הלבן של הלוגואים יתמזג בו */
 .clients{background:#fff;border-block:1px solid var(--line);padding-block:28px 32px;margin-inline:calc(-1 * clamp(16px,4vw,48px));overflow:hidden}
@@ -109,8 +109,10 @@ textarea{min-height:96px;resize:vertical}
 <body>
 
 <header class="hero">
-  <h1>ציפי גרידינגר</h1>
-  <p>סטודיו לגרפיקה</p>
+  <h1><picture>
+    <source type="image/avif" srcset="banner-960.avif 960w, banner-1600.avif 1600w, banner-2400.avif 2400w" sizes="100vw">
+    <img src="banner-1600.webp" srcset="banner-960.webp 960w, banner-1600.webp 1600w, banner-2400.webp 2400w" sizes="100vw" width="2400" height="800" fetchpriority="high" alt="ציפי גרידינגר · סטודיו לגרפיקה">
+  </picture></h1>
 </header>
 
 <section class="clients" aria-labelledby="clientsTitle">
