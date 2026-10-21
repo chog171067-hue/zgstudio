@@ -86,6 +86,15 @@ await writeFile(`${OUT}/index.html`, html);
 await cp("admin", `${OUT}/admin`, { recursive: true });
 // --- אייקונים, תמונת שיתוף, ומידע למנועי חיפוש ---
 await cp("static", OUT, { recursive: true });
+// הבאנר בראש הדף: נשמר בכמה גדלים, כדי שטלפון לא יוריד את הקובץ המקורי הכבד
+if (await exists("static/banner.png")) {
+  const banner = sharp(await readFile("static/banner.png"));
+  for (const size of [960, 1600, 2400]) {
+    await banner.clone().resize({ width: size }).avif({ quality: 60, effort: 4 }).toFile(`${OUT}/banner-${size}.avif`);
+    await banner.clone().resize({ width: size }).webp({ quality: 82 }).toFile(`${OUT}/banner-${size}.webp`);
+  }
+  await rm(`${OUT}/banner.png`);
+}
 const first = (await readJson("data/works.json", "works")).find(w => w.image && local(w.image));
 if (first && (await exists(local(first.image)))) {
   // התמונה שמופיעה כששולחים קישור לאתר בוואטסאפ, בפייסבוק וכו'
